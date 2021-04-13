@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title th:text="${title}"></title>
+  <meta name="_csrf" th:content="${_csrf.token}"/>
+  <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+  <!-- Tell the browser to be responsive to screen width -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- Toastr -->
+  <link rel="stylesheet" th:href="@{static/plugins/toastr/toastr.min.css}">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" th:href="@{static/plugins/fontawesome-free/css/all.min.css}">
+  <!-- Ionicons -->
+  <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+  <!-- Theme style -->
+  <link rel="stylesheet" th:href="@{static/dist/css/adminlte.min.css}">
+  <!-- Google Font: Source Sans Pro -->
+  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
+  <style>
+    #cubemap {
+      width: 800px;
+      height: 800px;
+      position: relative;
+      border: 1px solid #eee;
+      background: #fff;
+    }
+  </style>
+</head>
+<body class="hold-transition sidebar-mini">
+<div class="wrapper">
+  <!-- Navbar -->
+  <nav class="main-header navbar navbar-expand navbar-white navbar-light">
+    <!-- Left navbar links -->
+    <ul class="navbar-nav">
+      <li class="nav-item">
+        <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
+      </li>
+      <li class="nav-item d-none d-sm-inline-block">
+        <a th:href="@{index}" class="nav-link">主页</a>
+      </li>
+    </ul>
+  </nav>
+  <!-- /.navbar -->
+
+  <!-- Main Sidebar Container -->
+  <aside class="main-sidebar sidebar-dark-primary elevation-4">
+    <!-- Brand Logo -->
+    <a th:href="@{index}" class="brand-link">
+      <img th:src="@{static/dist/img/icon.png}"  alt="FangDu Logo" class="brand-image img-circle elevation-3"
+           style="opacity: .8">
+      <span class="brand-text font-weight-light">方都数字科技</span>
+    </a>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+      <!-- Sidebar Menu -->
+      <nav class="mt-2">
+        <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+          <!-- Add icons to the links using the .nav-icon class
+               with font-awesome or any other icon font library -->
+          <li class="nav-item">
+            <a th:href="@{index}" class="nav-link">
+              <i class="nav-icon fas fa-tachometer-alt"></i>
+              <p>
+                主面板
+              </p>
+            </a>
+          </li>
+          <li class="nav-item has-treeview" th:classappend="${menu == 'index'} ? 'menu-open' : '' ">
+            <a href="#" class="nav-link" th:classappend="${menu == 'index'} ? 'active' : '' ">
+              <i class="nav-icon fas fa-copy"></i>
+              <p>
+                小程序主页
+                <i class="fas fa-angle-left right"></i>
+              </p>
+            </a>
+            <ul class="nav nav-treeview">
+              <li class="nav-item">
+                <a th:href="@{swiper}" class="nav-link" th:classappend="${active == 'swiper'} ? 'active' : '' ">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>轮播图</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a th:href="@{swiper-form}" class="nav-link" th:classappend="${active == 'swiper-form'} ? 'active' : '' ">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>轮播图 - 添加</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a th:href="@{tabs}" class="nav-link" th:classappend="${active == 'tabs'} ? 'active' : '' ">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>案例图列表</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a th:href="@{tabs-form}" class="nav-link" th:classappend="${active == 'tabs-form'} ? 'active' : '' ">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>案例图列表 - 添加</p>
+                </a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-item has-treeview" th:classappend="${menu == 'case'} ? 'menu-open' : '' ">
+            <a href="#" class="nav-link" th:classappend="${menu == 'case'} ? 'active' : '' ">
+              <i class="nav-icon fas fa-copy"></i>
+              <p>
+                作品页
+                <i class="fas fa-angle-left right"></i>
+              </p>
+            </a>
+            <ul class="nav nav-treeview">
+              <li class="nav-item">
+                <a th:href="@{style}" class="nav-link" th:classappend="${active == 'style'} ? 'active' : '' ">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>风格标签</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a th:href="@{style-form}" class="nav-link" th:classappend="${active == 'style-form'} ? 'active' : '' ">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>风格标签 - 添加</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a th:href="@{function}" class="nav-link" th:classappend="${active == 'function'} ? 'active' : '' ">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>功能标签</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a th:href="@{function-form}" class="nav-link" th:classappend="${active == 'function-form'} ? 'active' : '' ">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>功能标签 - 添加</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a th:href="@{case}" class="nav-link" th:classappend="${active == 'case'} ? 'active' : '' ">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>作品</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a th:href="@{case-form}" class="nav-link" th:classappend="${active == 'case-form'} ? 'active' : '' ">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>作品 - 添加</p>
+                </a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-item has-treeview" th:classappend="${menu == 'service'} ? 'menu-open' : '' ">
+            <a href="#" class="nav-link" th:classappend="${menu == 'service'} ? 'active' : '' ">
+              <i class="nav-icon fas fa-copy"></i>
+              <p>
+                服务范围页
+                <i class="fas fa-angle-left right"></i>
+              </p>
+            </a>
+            <ul class="nav nav-treeview">
+              <li class="nav-item">
+                <a th:href="@{service}" class="nav-link" th:classappend="${active == 'service'} ? 'active' : '' ">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>服务范围列表</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a th:href="@{service-form}" class="nav-link" th:classappend="${active == 'service-form'} ? 'active' : '' ">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>服务范围 - 添加</p>
+                </a>
+              </li>
+            </ul>
+          </li>
+<!--          <li class="nav-item has-treeview" th:classappend="${menu == 'about'} ? 'menu-open' : '' ">-->
+<!--            <a href="#" class="nav-link" th:classappend="${menu == 'about'} ? 'active' : '' ">-->
+<!--              <i class="nav-icon fas fa-copy"></i>-->
+<!--              <p>-->
+<!--                关于我们页-->
+<!--                <i class="fas fa-angle-left right"></i>-->
+<!--              </p>-->
+<!--            </a>-->
+<!--            <ul class="nav nav-treeview">-->
+<!--              <li class="nav-item">-->
+<!--                <a th:href="@{about}" class="nav-link" th:classappend="${active == 'about'} ? 'active' : '' ">-->
+<!--                  <i class="far fa-circle nav-icon"></i>-->
+<!--                  <p>关于编辑</p>-->
+<!--                </a>-->
+<!--              </li>-->
+<!--              <li class="nav-item">-->
+<!--                <a th:href="@{about-form}" class="nav-link" th:classappend="${active == 'about-form'} ? 'active' : '' ">-->
+<!--                  <i class="far fa-circle nav-icon"></i>-->
+<!--                  <p>关于新增</p>-->
+<!--                </a>-->
+<!--              </li>-->
+<!--            </ul>-->
+<!--          </li>-->
+        </ul>
+      </nav>
+      <!-- /.sidebar-menu -->
+    </div>
+    <!-- /.sidebar -->
+  </aside>
+
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h1 th:text="${header}"></h1>
+          </div>
+          <div class="col-sm-6">
+            <ol class="breadcrumb float-sm-right">
+              <li class="breadcrumb-item"><a href="#" th:text="${page}"></a></li>
+              <li class="breadcrumb-item active"  th:text="${pageDesc}"></li>
+            </ol>
+          </div>
+        </div>
+      </div><!-- /.container-fluid -->
+    </section>
+
+    <!-- Main content -->
+    <section class="content">
+      <div class="container-fluid">
+        <div class="row">
+          <!--作品-->
+          <div class="col-md-6">
+            <div class="card card-primary">
+              <div class="card-header">
+                <h3 class="card-title" th:text="${header}"></h3>
+              </div>
+              <!-- /.card-header -->
+              <input id="cubeRotation" type="number" min="0" max="359" value="180" hidden="hidden" />
+              <input type="radio" name="format" value="png" checked hidden="hidden" />
+              <input type="radio" name="interpolation" value="lanczos" checked hidden="hidden" />
+              <!-- form start multipart/form-data -->
+              <form class="form-horizontal" id="form" method="post" enctype="multipart/form-data">
+                <input type="hidden"
+                       th:name="${_csrf.parameterName}"
+                       th:value="${_csrf.token}"/>
+                <div class="card-body">
+                  <div class="form-group row" th:each="item : ${forms}">
+
+                    <label  class="col-sm-2 col-form-label" th:for="${item.name}" th:text="${item.text}"></label>
+                    <div class="col-sm-10" th:if="${item.type == 'number'}">
+                      <input type="number" class="form-control" th:placeholder="${item.text}" th:id="${item.name}" th:name="${item.name}" th:value="${item.value}">
+                    </div>
+                    <div class="col-sm-10" th:if="${item.type == 'text'}">
+                      <input type="text" class="form-control" th:placeholder="${item.text}" th:id="${item.name}" th:name="${item.name}" th:value="${item.value}">
+                    </div>
+                    <div class="col-sm-10" th:if="${item.type == 'select' && item.name == 'is_href'}">
+                      <select class="custom-select" th:id="${item.name}" th:name="${item.name}">
+                        <option value="0">不跳转</option>
+                        <option value="1">跳转</option>
+                      </select>
+                    </div>
+                    <div class="col-sm-10" th:if="${item.type == 'select' && item.name == 'tabs'}">
+                      <select class="custom-select" th:id="${item.name}" th:name="${item.name}">
+                        <option value="0">家装效果图</option>
+                        <option value="1">工装效果图</option>
+                        <option value="2">建筑效果图</option>
+                        <option value="3">CAD施工图</option>
+                      </select>
+                    </div>
+                    <div class="col-sm-10" th:if="${item.type == 'select' && item.name == 'function'}">
+                      <select class="custom-select"  th:id="${item.name}" th:name="${item.name}">
+                        <option  th:each="item : ${functions}" th:text="${item.function}" th:value="${item.id}"></option>
+                      </select>
+                    </div>
+                    <div class="col-sm-10" th:if="${item.type == 'select' && item.name == 'style'}">
+                      <select class="custom-select" th:id="${item.name}" th:name="${item.name}">
+                        <option  th:each="item : ${styles}" th:text="${item.style}" th:value="${item.id}"></option>
+                      </select>
+                    </div>
+                    <div class="col-sm-10" th:if="${item.type == 'file'}">
+                      <div class="custom-file">
+                        <input type="file" accept="image/*" class="custom-file-input" th:id="${item.name}"  th:name="${item.name}">
+                        <label class="custom-file-label" th:for="${item.name}">选择文件</label>
+                      </div>
+                    </div>
+<!--                    <div class="input-group" th:if="${item.type == 'file'}">-->
+<!--                      <div class="custom-file">-->
+<!--                        <input type="file" class="custom-file-input" th:id="${item.name}"  th:name="${item.name}">-->
+<!--                        <label class="custom-file-label" th:for="${item.name}">选择文件</label>-->
+<!--                      </div>-->
+<!--                      <div class="input-group-append">-->
+<!--                        <span class="input-group-text" id="">上传</span>-->
+<!--                      </div>-->
+<!--                    </div>-->
+                  </div>
+                </div>
+                <!-- /.card-body -->
+                <div class="card-footer">
+                  <button type="submit" id="btn"  class="btn btn-primary">提交</button>
+                </div>
+                <!-- /.card-footer -->
+              </form>
+            </div>
+            <!-- /.card -->
+          </div>
+          <!-- right column -->
+          <div class="col-md-6">
+            <div class="card card-success">
+              <div class="card-header">
+                <h3 class="card-title">填写提示</h3>
+              </div>
+              <!-- /.card-header -->
+              <div class="card-body">
+                <div class="form-group row" th:each="item : ${forms}">
+                  <label  class="col-sm-2 col-form-label" th:for="${item.name}" th:text="${item.text}"></label>
+                  <div class="col-sm-10">
+                    <input type="text" class="form-control" th:placeholder="${item.text}" th:id="${item.name}" th:value="${item.tips}" disabled>
+                  </div>
+                </div>
+              </div>
+              <!-- /.card-body -->
+            </div>
+          </div>
+
+          <!--VR图-->
+          <div class="col-12" th:if="${active == 'case-form'}">
+            <div class="card card-primary">
+              <div class="card-header">
+                <h3 class="card-title">VR图示例</h3>
+              </div>
+              <div class="card-body">
+                <div id="cubemap">
+                  <b id="generating" style="visibility:hidden">生成中...</b>
+                  <output id="faces"></output>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+        <!-- 服务范围 -->
+        <!-- /.container-fluid -->
+    </section>
+    <!-- /.content -->
+  </div>
+  <!-- /.content-wrapper -->
+  <footer class="main-footer">
+    <strong>Copyright &copy; 2018-2020 <a href="http://fangdushuzi.io">FangDu Digital Technology</a>.</strong>
+    All rights reserved.
+    <div class="float-right d-none d-sm-inline-block">
+      <b>Version</b> 1.0.0
+    </div>
+  </footer>
+
+
+  <!-- Control Sidebar -->
+  <aside class="control-sidebar control-sidebar-dark">
+    <!-- Control sidebar content goes here -->
+  </aside>
+  <!-- /.control-sidebar -->
+</div>
+<!-- ./wrapper -->
+
+<!-- jQuery -->
+<script th:src="@{static/plugins/jquery/jquery.min.js}"></script>
+<!-- Bootstrap 4 -->
+<script th:src="@{static/plugins/bootstrap/js/bootstrap.bundle.min.js}"></script>
+<!-- bs-custom-file-input -->
+<script th:src="@{static/plugins/bs-custom-file-input/bs-custom-file-input.min.js}"></script>
+<!-- AdminLTE App -->
+<script th:src="@{static/dist/js/adminlte.min.js}"></script>
+<!-- Toastr -->
+<script th:src="@{static/plugins/toastr/toastr.min.js}"></script>
+<!-- Skybox -->
+<script th:src="@{static/plugins/skybox/main.js}" th:if="${active == 'case-form'}"></script>
+<script type="text/javascript">
+  $(document).ready(function () {
+    bsCustomFileInput.init();
+
+  });
+</script>
+<script type="text/javascript" th:inline="javascript">
+  const globalFormData = new FormData();
+  /*<![CDATA[*/
+  var url = /*[[${href}]]*/;
+  $(function() {
+    $('form').submit(function (event) {
+      $('#btn').prop('disabled',true)
+      let formData = new FormData($('form')[0]);
+      for (var item of formData.entries()) {
+        globalFormData.append(item[0], item[1]);
+      }
+      event.preventDefault();
+      var token = $("meta[name='_csrf']").attr("content");
+      var header = $("meta[name='_csrf_header']").attr("content");
+      $.ajax({
+        type: 'post',
+        cache: false,
+        contentType: false,
+        processData: false,
+        url: url,
+        data: globalFormData,
+        beforeSend: function(xhr) {
+          xhr.setRequestHeader(header, token);
+        },
+        success: function (data) {
+          $('#btn').prop('disabled',false)
+          console.log(JSON.stringify(data))
+          if(data.code === 0){
+            formReset();
+            toastr.success('记录新增/更新成功.')
+          }else {
+            toastr.error('记录新增/更新失败,请检查每个属性是否正确填写.')
+          }
+          return true;
+        },
+        error: function (err) {
+          $(this).prop('disabled',true)
+          console.log("失败",err)
+          toastr.error('记录新增/更新失败,请检查每个属性是否正确填写.')
+          return false;
+        }
+      });
+    });
+
+    function formReset() {
+      $(':input', '#form')
+              .not(':button, :submit, :reset, :hidden,:radio') // 去除不需要重置的input类型
+              .val('')
+              .removeAttr('checked')
+              .removeAttr('selected');
+    }
+  });
+  /*]]>*/
+</script>
+</body>
+</html>

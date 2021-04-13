@@ -1,0 +1,41 @@
+plugins {
+	id 'org.springframework.boot' version '2.2.2.RELEASE'
+	id 'io.spring.dependency-management' version '1.0.8.RELEASE'
+	id 'java'
+}
+
+group = 'com.fangdushuzi'
+version = '1.0.0'
+sourceCompatibility = '1.8'
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	//模板引擎
+	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+	//Web与安全
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	//jsoup
+	implementation 'org.jsoup:jsoup:1.13.1'
+	//jackson
+	implementation 'com.fasterxml.jackson.core:jackson-core:2.11.0'
+	//log4j
+	implementation 'org.apache.logging.log4j:log4j-api:2.13.3'
+	implementation 'org.apache.logging.log4j:log4j-core:2.13.3'
+	implementation 'org.springframework.boot:spring-boot-starter-webflux'
+	implementation 'org.projectreactor:reactor-spring:1.0.1.RELEASE'
+	implementation 'org.springframework.boot:spring-boot-starter-security'
+	implementation 'org.springframework.security:spring-security-test'
+	//grandle
+	compileOnly 'org.projectlombok:lombok:1.18.12'
+	annotationProcessor 'org.projectlombok:lombok:1.18.12'
+	testImplementation('org.springframework.boot:spring-boot-starter-test') {
+		exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+	}
+}
+
+test {
+	useJUnitPlatform()
+}
